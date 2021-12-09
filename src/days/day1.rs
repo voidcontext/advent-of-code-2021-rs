@@ -10,7 +10,7 @@ pub fn count_increases(measurements: &[i32]) -> i32 {
 
 pub fn count_sliding(measurements: &[i32]) -> i32 {
     (measurements[0..])
-        .into_iter()
+        .iter()
         .zip(&measurements[1..])
         .zip(&measurements[2..])
         .fold((0, measurements[0] + measurements[1] + measurements[2]), |(count, previous_sum), ((a, b), c)| {

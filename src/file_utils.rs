@@ -15,6 +15,16 @@ pub fn read_i32_list(filename: &str) -> Vec<i32> {
         .collect()
 }
 
+pub fn read_string_list(filename: &str) -> Vec<String> {
+    let file = File::open(filename).unwrap();
+
+    BufReader::new(file)
+        .lines()
+        .into_iter()
+        .map(|line| line.unwrap().trim().to_owned())
+        .collect()
+}
+
 pub fn read_submarine_commands(filename: &str) -> Vec<Command> {
     let file = File::open(filename).unwrap();
 

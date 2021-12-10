@@ -13,14 +13,12 @@ fn main() {
     let puzzles: Vec<fn()> = vec![
         puzzles::day1::solve,
         puzzles::day2::solve,
+        puzzles::day3::solve,
     ];
 
-    puzzles
-        .iter()
-        .enumerate()
-        .for_each(|(i, solve)| {
-            if filter == "all" || filter == &(i + 1).to_string() {
-                solve()
-            }
-        });
+    puzzles.iter().enumerate().for_each(|(i, solve)| {
+        if filter == "all" || filter == &(i + 1).to_string() {
+            solve()
+        }
+    });
 }

@@ -1,4 +1,12 @@
-pub fn count_increases(measurements: &[i32]) -> i32 {
+use crate::file_utils;
+
+pub fn solve() {
+    let day1_input = file_utils::read_i32_list("data/day1.input");
+    println!("Day1 A result: {}", count_increases(&day1_input));
+    println!("Day1 B result: {}", count_sliding(&day1_input));
+}
+
+fn count_increases(measurements: &[i32]) -> i32 {
     (measurements[1..])
         .iter()
         .fold((0, &measurements[0]), |(count, previous), current| {
@@ -7,7 +15,7 @@ pub fn count_increases(measurements: &[i32]) -> i32 {
         .0
 }
 
-pub fn count_sliding(measurements: &[i32]) -> i32 {
+fn count_sliding(measurements: &[i32]) -> i32 {
     (measurements[0..])
         .iter()
         .zip(&measurements[1..])

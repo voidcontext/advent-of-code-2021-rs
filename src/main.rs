@@ -1,15 +1,26 @@
-use days::*;
+use std::env;
 
-mod days;
 mod file_utils;
+mod puzzles;
 mod submarine;
 
 fn main() {
-    let day1_input = file_utils::read_i32_list("data/day1_a.input");
-    println!("Day1 A result: {}", day1::count_increases(&day1_input));
-    println!("Day1 B result: {}", day1::count_sliding(&day1_input));
+    let args: Vec<String> = env::args().collect();
 
-    let day2_input = file_utils::read_submarine_commands("data/day2_a.input");
-    println!("Day2 A Result {}", day2::calc_position_mul(&day2_input));
-    println!("Day2 A Result {}", day2::calc_position_aimed(&day2_input));
+    let default = "all".to_owned();
+    let filter = args.get(1).unwrap_or(&default);
+
+    let puzzles: Vec<fn()> = vec![
+        puzzles::day1::solve,
+        puzzles::day2::solve,
+    ];
+
+    puzzles
+        .iter()
+        .enumerate()
+        .for_each(|(i, solve)| {
+            if filter == "all" || filter == &(i + 1).to_string() {
+                solve()
+            }
+        });
 }

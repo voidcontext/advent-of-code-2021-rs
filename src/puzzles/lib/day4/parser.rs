@@ -1,11 +1,11 @@
 use nom::branch::alt;
 use nom::bytes::complete::{tag, take};
-use nom::character::complete::{char, digit1, line_ending, newline, space0};
-use nom::character::is_digit;
+use nom::character::complete::{char, digit1, line_ending};
+
 use nom::combinator::map;
 use nom::combinator::map_res;
 use nom::multi::{count, separated_list1};
-use nom::sequence::{pair, preceded, separated_pair, terminated};
+use nom::sequence::{preceded, separated_pair, terminated};
 use nom::IResult;
 
 #[derive(Debug, PartialEq)]

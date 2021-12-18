@@ -2,16 +2,16 @@ use nom::branch::alt;
 use nom::bytes::complete::{tag, take};
 use nom::character::complete::{char, digit1, line_ending};
 
-use nom::combinator::map;
 use nom::combinator::map_res;
+use nom::combinator::{map, verify};
 use nom::multi::{count, separated_list1};
 use nom::sequence::{preceded, separated_pair, terminated};
 use nom::IResult;
 
 #[derive(Debug, PartialEq)]
 pub struct Day4Input {
-    numbers_drawn: Vec<u32>,
-    bingo_boards: Vec<Vec<u32>>,
+    pub numbers_drawn: Vec<u32>,
+    pub bingo_boards: Vec<Vec<u32>>,
 }
 
 #[derive(Debug, PartialEq)]
@@ -47,26 +47,16 @@ fn u32_parser(input: &str) -> IResult<&str, u32> {
     map_res(digit1, int_from_string)(input)
 }
 
-fn check_bingo_number(number: u32) -> Result<u32, ParserError> {
-    if number > 75 {
-        Err(ParserError {
-            message: format!("Not a bingo number, {} > 75", number),
-        })
-    } else {
-        Ok(number)
-    }
-}
-
 fn bingo_number(input: &str) -> IResult<&str, u32> {
     alt((
         preceded(char(' '), map_res(take(1usize), int_from_string)),
-        map_res(map_res(take(2usize), int_from_string), check_bingo_number),
+        map_res(take(2usize), int_from_string),
     ))(input)
 }
 
 fn numbers_drawn_line(input: &str) -> IResult<&str, Vec<u32>> {
     terminated(
-        separated_list1(tag(","), map_res(u32_parser, check_bingo_number)),
+        separated_list1(tag(","), verify(u32_parser, |n| *n < 100u32)),
         line_ending,
     )(input)
 }
@@ -74,10 +64,15 @@ fn numbers_drawn_line(input: &str) -> IResult<&str, Vec<u32>> {
 fn bingo_board(input: &str) -> IResult<&str, Vec<u32>> {
     map(
         count(
-            count(terminated(bingo_number, alt((tag(" "), line_ending))), 5), // TOOD: make this more precise: e.g. incorrect when there's a new line after 3 numbers
+            terminated(
+                verify(separated_list1(tag(" "), bingo_number), |l: &[u32]| {
+                    l.len() == 5
+                }),
+                line_ending,
+            ),
             5,
         ),
-        |lines| lines.iter().flatten().cloned().collect(),
+        |lines| lines.into_iter().flatten().collect(),
     )(input)
 }
 
@@ -87,11 +82,11 @@ mod tests {
 
     #[test]
     fn test_numbers_drawn_line() {
-        let input = "12,32,43,72,38,60\n";
+        let input = "12,32,43,72,38,80\n";
 
         assert_eq!(
             numbers_drawn_line(input),
-            Ok(("", vec![12, 32, 43, 72, 38, 60]))
+            Ok(("", vec![12, 32, 43, 72, 38, 80]))
         )
     }
 
@@ -101,7 +96,7 @@ mod tests {
 75 54  2 34 35
 19 43 32 45 67
 63 71  1 37 21
-15 72 22 44 51
+15 72 22 94 51
 ";
 
         assert_eq!(
@@ -110,10 +105,23 @@ mod tests {
                 "",
                 vec![
                     12, 23, 7, 12, 34, 75, 54, 2, 34, 35, 19, 43, 32, 45, 67, 63, 71, 1, 37, 21,
-                    15, 72, 22, 44, 51
+                    15, 72, 22, 94, 51
                 ]
             ))
         )
+    }
+
+    #[test]
+    fn test_bingo_board_fails_when_there_extra_line() {
+        let board = "12
+23  7 12 34
+75 54  2 34 35
+19 43 32 45 67
+63 71  1 37 21
+15 72 22 94 51
+";
+
+        assert!(bingo_board(board).is_err())
     }
 
     #[test]

@@ -42,8 +42,8 @@ fn calc_power_consumption_rates(diagnostic: &[isize], nr_of_bits: usize) -> (i32
     most_common_bits(diagnostic, nr_of_bits)
         .iter()
         .enumerate()
-        .for_each(|(n, most_comon_bit)| {
-            if most_comon_bit == &1 {
+        .for_each(|(n, &most_comon_bit)| {
+            if most_comon_bit == 1 {
                 gamma_rate |= 1 << n
             } else {
                 epsilon_rate |= 1 << n

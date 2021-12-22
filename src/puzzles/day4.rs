@@ -34,14 +34,14 @@ pub fn solve() {
 fn initial_state(boards: &[Vec<u32>]) -> Vec<BoardState> {
     boards
         .iter()
-        .map(|board| board.iter().map(|n| (*n, false)).collect())
+        .map(|board| board.iter().map(|&n| (n, false)).collect())
         .collect()
 }
 
 fn calc_board_score(board_state: &[(u32, bool)], last_number: usize) -> usize {
     board_state.iter().fold(
         0,
-        |acc, (n, marked)| if *marked { acc } else { acc + (*n) as usize },
+        |acc, &(n, marked)| if marked { acc } else { acc + n as usize },
     ) * last_number
 }
 

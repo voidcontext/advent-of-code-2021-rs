@@ -2,7 +2,6 @@ use std::env;
 
 mod file_utils;
 mod puzzles;
-mod submarine;
 
 fn main() {
     let args: Vec<String> = env::args().collect();

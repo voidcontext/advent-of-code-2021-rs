@@ -19,7 +19,7 @@ pub fn solve() {
         &first_winner,
         input.numbers_drawn[first_winner_index] as usize,
     );
-    println!("Day4 A resull: {:?}", result_a);
+    println!("Day4 A result: {:?}", result_a);
 
     let (last_winner, last_winner_index) =
         find_last_winner(&input.bingo_boards, &input.numbers_drawn);
@@ -28,7 +28,7 @@ pub fn solve() {
         &last_winner,
         input.numbers_drawn[last_winner_index] as usize,
     );
-    println!("Day4 B resull: {:?}", result_b);
+    println!("Day4 B result: {:?}", result_b);
 }
 
 fn initial_state(boards: &[Vec<u32>]) -> Vec<BoardState> {

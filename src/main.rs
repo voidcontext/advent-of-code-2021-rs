@@ -15,6 +15,7 @@ fn main() {
         puzzles::day3::solve,
         puzzles::day4::solve,
         puzzles::day5::solve,
+        puzzles::day6::solve,
     ];
 
     puzzles.iter().enumerate().for_each(|(i, solve)| {
